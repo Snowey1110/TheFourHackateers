@@ -32,6 +32,7 @@ function callCO2API(){
         co2Data = response;
         console.log(co2Data);
     });
+    return co2Data;
 }
 
 function updateOutput(electricityResponse, airQualityResponse, co2Response){
