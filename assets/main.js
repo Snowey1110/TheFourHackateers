@@ -1,146 +1,80 @@
 function searchButtonScript() {
     console.log("Hello");
-    electricityResponse = callElectricityAPI();
-    //airQualityResponse = callAirQualAPI();
-    //co2Response = callCO2API();
+    electricityResponse = callElectricityAPI(null, null, null, "98012", null);//Hardcoded values for now
+    airQualityResponse = callAirQualAPI();
+    co2Response = callCO2API();
+    
 
-    //updateOutput(electricityResponse,airQualityResponse,co2Response);
+    updateOutput(electricityResponse,airQualityResponse,co2Response);
 }
 
 
-function callElectricityAPI(){
-    // const http = require('https');
 
-    // const options = {
-    //   method: 'GET',
-    //   hostname: 'apis.wattbuy.com',
-    //   port: null,
-    //   path: '/v3/electricity/info',
-    //   headers: {
-    //     accept: 'application/json',
-    //     'x-api-key': 'JG93JqFemA7uh5oE5diVca7sztHx4L6y2eXLE6cr'
-    //   }
-    // };
-    
-    // const req = http.request(options, function (res) {
-    //   const chunks = [];
-    
-    //   res.on('data', function (chunk) {
-    //     chunks.push(chunk);
-    //   });
-    
-    //   res.on('end', function () {
-    //     const body = Buffer.concat(chunks);
-    //     console.log(body.toString());
-    //   });
-    // });
-    
-    // req.end();
+/**
+ * 
+ * @param {*} address Address of the location
+ * @param {*} city City of the location
+ * @param {*} state State of the location. Usually this can be done for us automatically from the zipcode
+ * @param {*} zip Zip code of the location. REQUIRED NO MATTER WHAT
+ * @param {*} type "house" or "apartment"
+ * 
+ * Returns a promise object that contains the data from the API
+ */
+function callElectricityAPI(address, city, state, zip, type){
 
-
-
-    // var request = new XMLHttpRequest(); // Create a request variable and assign a new XMLHttpRequest object to it.
-    // request.open('GET', 'https://some service'); // Open a new connection, using the GET request on the URL endpoint
-    // request.send();
-    
-    // request.onload = async function () {
-    //     var data = JSON.parse(this.response);
-    //     document.getElementById('testId').InnerHTML = data // depending on your response targert your desired property.
-    // }
-
-
-    // var request = new XMLHttpRequest();
-    // request.open('GET','https://apis.wattbuy.com/v3/electricity/info',true);
-    
-
-    // request.onload = function(){
-    //     if(this.status == 200){
-    //         console.log("200 code yay");
-
-    //         var response = JSON.parse(request.responseText);
-
-    //         console.log(response);
-    //     }
-    //     else {
-    //         console.log("failure lol");
-    //     }
-    // }
-
-    // request.onerror = function(){
-    //     console.log("Request Error");
-    // }
-
-    // request.setRequestHeader('Authorization', 'Bearer ' + 'JG93JqFemA7uh5oE5diVca7sztHx4L6y2eXLE6cr');
-
-    // request.send();
-
-
-    const options = {
-        method: 'GET',
-        hostname: 'apis.wattbuy.com',
-        port: null,
-        path: '/v3/electricity/info',
-        headers: {
-          accept: 'application/json',
-          'x-api-key': 'JG93JqFemA7uh5oE5diVca7sztHx4L6y2eXLE6cr'
-        }
-      };
-
-
-    let dataReturned;
-
-    // $.ajax(options).done(function (response) {
-    //     dataReturned = response;
-    //     console.log(dataReturned);
-    // });
-
-
-
-    let endpoint = 'https://apis.wattbuy.com/v3/electricity/estimation'
-
-    let dataQuery = "?zip=98012"
-
+    let endpoint = "https://apis.wattbuy.com/v3/electricity/estimation"
+    let dataQuery = createDataQuery(address, city, state, zip, type);
     let finalURL = endpoint + dataQuery;
 
-    let apiKey = 'JG93JqFemA7uh5oE5diVca7sztHx4L6y2eXLE6cr'
+    let apiKey = "JG93JqFemA7uh5oE5diVca7sztHx4L6y2eXLE6cr"
 
-    $.ajax({
+    let resultOfRequest = electrictyAPIResult(finalURL,apiKey);
+
+    return resultOfRequest;
+
+}
+
+
+function electrictyAPIResult(finalURL, apiKey){
+    return $.ajax({
         type: "GET",
         url: finalURL,
         dataType: 'json',
         contentType: 'json',
         headers: {'x-api-key':apiKey},
-        success: onSucc,
-        error: onFail
-    })
+        success: function(response){
+            return(response)
+        }
+    });
+}
 
 
-    function onSucc(response){
-        console.log(response)
+function createDataQuery(address, city, state, zip, type){
+    query = "?";
+    atLeastOne = false;
+
+    //We always have this
+    if (zip != null) {
+        query += ("zip=" + zip + "&");
     }
 
-    function onFail(response){
-        console.log("FAIL")
-        console.log(response);
+    if (address != null) {
+        query += ("address=" + address.replaceAll(" ", "%") + "&");
     }
 
+    if (city != null) {
+        query+= ("city=" + city + "&");
+    }
 
+    if (state != null) {
+        query += ("state=" + state + "&")
+    }
 
-    // $.ajax({
-    //     url: endpoint + "?key=" + apiKey + " &q=" + $( this ).text(),
-    //     contentType: "application/json",
-    //     dataType: 'json',
-    //     success: function(result){
-    //         console.log(result);
-    //     }
-    // })
+    if (type != null) {
+        query += ("house_type=" + type);
+    }
 
-
-
-
-
-    
-
+    return query;
 }
 
 function callAirQualAPI(){
@@ -148,9 +82,10 @@ function callAirQualAPI(){
 }
 
 function callCO2API(){
-
+    
 }
 
 function updateOutput(electricityResponse, airQualityResponse, co2Response){
 
 }
+
