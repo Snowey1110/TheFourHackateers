@@ -2,7 +2,7 @@ function searchButtonScript() {
     electricityResponse = callElectricityAPI();
     airQualityResponse = callAirQualAPI();
     co2Response = callCO2API();
-
+    console.log(airQualityResponse);
     updateOutput(electricityResponse, airQualityResponse, co2Response);
 }
 
@@ -12,14 +12,22 @@ function callElectricityAPI() {
 }
 
 function callAirQualAPI() {
-    const API_KEY = '61a0cafd-c4c5-47c1-8250-b2ca702301b2';
-    const url = `https://api.example.com/airquality?key=${API_KEY}`;
-
-    return fetch(url)
+    return fetch('http://api.airvisual.com/v2/city?city=Los%20Angeles&state=California&country=USA&key=61a0cafd-c4c5-47c1-8250-b2ca702301b2')
         .then(response => response.json())
-        .then(data => data.results)
-        .catch(error => console.error(error));
+        .then(data => {
+            return data; // Return the parsed data
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
+callAirQualAPI().then(data => {
+    // Use the parsed data here
+    console.log(data);
+}).catch(error => {
+    // Handle any errors that occurred during the request
+    console.error('Error:', error);
+});
 
 function callCO2API() {
 
