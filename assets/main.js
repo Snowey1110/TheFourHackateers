@@ -1,9 +1,8 @@
 function searchButtonScript() {
     console.log("Hello");
-    electricityResponse = callElectricityAPI(null, null, null, "98012", null);//Hardcoded values for now
+    electricityResponse = callElectricityAPI(null, null, "hawaii", "96825", null);//Hardcoded values for now
     airQualityResponse = callAirQualAPI();
     co2Response = callCO2API();
-    
 
     updateOutput(electricityResponse,airQualityResponse,co2Response);
 }
@@ -25,6 +24,8 @@ function callElectricityAPI(address, city, state, zip, type){
     let endpoint = "https://apis.wattbuy.com/v3/electricity/estimation"
     let dataQuery = createDataQuery(address, city, state, zip, type);
     let finalURL = endpoint + dataQuery;
+
+    console.log(finalURL)
 
     let apiKey = "JG93JqFemA7uh5oE5diVca7sztHx4L6y2eXLE6cr"
 
@@ -59,7 +60,7 @@ function createDataQuery(address, city, state, zip, type){
     }
 
     if (address != null) {
-        query += ("address=" + address.replaceAll(" ", "%") + "&");
+        query += ("address=" + address.replaceAll(" ", "%20") + "&");
     }
 
     if (city != null) {
@@ -86,6 +87,35 @@ function callCO2API(){
 }
 
 function updateOutput(electricityResponse, airQualityResponse, co2Response){
+
+    electricityResponse.done(data => {
+        
+
+        let usage = data.est_usage
+
+        let average = 10632
+        let percentBuffer = 0.2
+
+        if(usage > (average - average * percentBuffer) && usage < (average + average * percentBuffer)){//plus minus 20% of average
+            document.getElementById("top_circle").classList.value="yellow-circle"
+        }
+        else if (usage < (average - average * percentBuffer)){//lower end
+            document.getElementById("top_circle").classList.value="green-circle"
+        }
+        else {
+            document.getElementById("top_circle").classList.value="red-circle"
+        }
+
+        console.log(average - average * percentBuffer)
+        console.log(average + average * percentBuffer)
+
+        console.log(data)
+
+    });
+    
+    
+
+
 
 }
 
