@@ -40,7 +40,7 @@ function callCO2API(){
     return co2Data;
 }
 
-function callAirPollAPI(str) {
+function callAirPollAPI(loc) {
     const settings = {
         async: true,
         crossDomain: true,
