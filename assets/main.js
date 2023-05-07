@@ -36,7 +36,7 @@ function callElectricityAPI(address, city, state, zip, type){
 
     console.log(finalURL)
 
-    let apiKey = "JG93JqFemA7uh5oE5diVca7sztHx4L6y2eXLE6cr"
+    let apiKey = "1D5B9T0PJq5LaubsWDwgZ3pUs8zGoBWSrgIpmvUj"
 
     let resultOfRequest = electrictyAPIResult(finalURL, apiKey);
 
