@@ -13,9 +13,8 @@ function searchButtonScript() {
     airQualityResponse = callAirQualAPI();
     co2Response = callCO2API();
 
-    updateOutput(electricityResponse,airQualityResponse,co2Response);
+    updateOutput(electricityResponse, airQualityResponse, co2Response);
 }
-
 
 
 /**
@@ -28,6 +27,7 @@ function searchButtonScript() {
  * 
  * Returns a promise object that contains the data from the API
  */
+
 function callElectricityAPI(address, city, state, zip, type){
 
     let endpoint = "https://apis.wattbuy.com/v3/electricity/estimation"
@@ -38,26 +38,24 @@ function callElectricityAPI(address, city, state, zip, type){
 
     let apiKey = "JG93JqFemA7uh5oE5diVca7sztHx4L6y2eXLE6cr"
 
-    let resultOfRequest = electrictyAPIResult(finalURL,apiKey);
+    let resultOfRequest = electrictyAPIResult(finalURL, apiKey);
 
     return resultOfRequest;
 
 }
 
-
-function electrictyAPIResult(finalURL, apiKey){
+function electrictyAPIResult(finalURL, apiKey) {
     return $.ajax({
         type: "GET",
         url: finalURL,
         dataType: 'json',
         contentType: 'json',
-        headers: {'x-api-key':apiKey},
-        success: function(response){
-            return(response)
+        headers: { 'x-api-key': apiKey },
+        success: function (response) {
+            return (response)
         }
     });
 }
-
 
 function createDataQuery(address, city, state, zip, type){
     query = "?";
@@ -87,15 +85,53 @@ function createDataQuery(address, city, state, zip, type){
     return query;
 }
 
-function callAirQualAPI(){
-
+function callAirQualAPI() {
+    return fetch('http://api.airvisual.com/v2/city?city=Los%20Angeles&state=California&country=USA&key=61a0cafd-c4c5-47c1-8250-b2ca702301b2')
+        .then(response => response.json())
+        .then(data => {
+            const cityData = {
+                "pollution": [
+                    {
+                        "ts": data.data.current.pollution.ts,
+                        "aqius": data.data.current.pollution.aqius,
+                        "mainus": data.data.current.pollution.mainus,
+                        "aqicn": data.data.current.pollution.aqicn,
+                        "maincn": data.data.current.pollution.maincn,
+                        [data.data.current.pollution.mainus]: {
+                            "conc": data.data.current.pollution[data.data.current.pollution.mainus]?.conc,
+                            "aqius": data.data.current.pollution[data.data.current.pollution.mainus]?.aqius,
+                            "aqicn": data.data.current.pollution[data.data.current.pollution.mainus]?.aqicn
+                        }
+                    }
+                ]
+            };
+            console.log(cityData);
+            console.log(cityData.pollution[0].aqius);
+            return cityData.pollution[0].aqius;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+function getCityData() {
+    return cityData;
 }
 
-function callCO2API(){
-    
+function checkPollutionLevel(cityData) {
+
+    const aqiUS = cityData.pollution[0].aqius;
+    const aqiCN = cityData.pollution[0].aqicn;
+
+    if (aqiUS <= 100 && aqiCN <= 100) {
+        return "good";
+    } else if (aqiUS <= 200 && aqiCN <= 200) {
+        return "unhealthy";
+    } else {
+        return "hazardous";
+    }
 }
 
-function updateOutput(electricityResponse, airQualityResponse, co2Response){
+function callCO2API() {
 
     electricityResponse.done(data => {
         
@@ -126,5 +162,43 @@ function updateOutput(electricityResponse, airQualityResponse, co2Response){
 
 
 
+}
+
+function updateOutput(electricityResponse, airQualityResponse, co2Response) {
+    electricityResponse.done(data => {
+
+
+        let usage = data.est_usage
+
+        let average = 10632
+        let percentBuffer = 0.2
+
+        if (usage > (average - average * percentBuffer) && usage < (average + average * percentBuffer)) {//plus minus 20% of average
+            document.getElementById("elec_circle").classList.value = "yellow-circle"
+        }
+        else if (usage < (average - average * percentBuffer)) {//lower end
+            document.getElementById("elec_circle").classList.value = "green-circle"
+        }
+        else {
+            document.getElementById("elec_circle").classList.value = "red-circle"
+        }
+
+        console.log(average - average * percentBuffer)
+        console.log(average + average * percentBuffer)
+
+        console.log(data)
+
+    });
+
+    airQualityResponse.then(airQualityResponse => {
+        console.log(airQualityResponse);
+        if (airQualityResponse <= 100) {
+            document.getElementById("air_circle").classList.value = "green-circle"
+        } else if (airQualityResponse <= 200) {
+            document.getElementById("air_circle").classList.value = "yellow-circle"
+        } else {
+            document.getElementById("air_circle").classList.value = "red-circle"
+        }
+    });
 }
 
