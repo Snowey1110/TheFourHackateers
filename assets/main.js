@@ -86,7 +86,7 @@ function createDataQuery(address, city, state, zip, type){
 }
 
 function callAirQualAPI() {
-    return fetch('http://api.airvisual.com/v2/city?city=Los%20Angeles&state=California&country=USA&key=61a0cafd-c4c5-47c1-8250-b2ca702301b2')
+    return fetch('https://api.airvisual.com/v2/city?city=Los%20Angeles&state=California&country=USA&key=61a0cafd-c4c5-47c1-8250-b2ca702301b2')
         .then(response => response.json())
         .then(data => {
             const cityData = {
