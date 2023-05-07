@@ -11,7 +11,7 @@ function searchButtonScript() {
 
     electricityResponse = callElectricityAPI(address, city, state, zipcode, null);//Ignore house type for now
     airQualityResponse = callAirQualAPI();
-    co2Response = callCO2API();
+    co2Response = callCO2API(city);
 
     updateOutput(electricityResponse, airQualityResponse, co2Response);
 }
@@ -145,11 +145,11 @@ function callCO2API(city){
         }
     };
     let polData;
-    $.ajax(settings).done(function (response) {
+    return $.ajax(settings).done(function (response) {
         polData = response;
         console.log(polData);
     });
-    return polData;
+    //return polData;
 }
 
 function updateOutput(electricityResponse, airQualityResponse, co2Response) {
@@ -188,5 +188,17 @@ function updateOutput(electricityResponse, airQualityResponse, co2Response) {
             document.getElementById("air_circle").classList.value = "red-circle"
         }
     });
+
+    co2Response.then(co2Response => {
+        console.log(co2Response);
+        if(co2Response <= 400) {
+            document.getElementById("air_circle").classList.value = "green-circle"
+        } else if(co2Response > 400 && co2Response <= 1000){
+            document.getElementById("air_circle").classList.value = "yellow-circle"
+    }else {
+            document.getElementById("air_circle").classList.value = "red-circle"
+    }
+});
+
 }
 
