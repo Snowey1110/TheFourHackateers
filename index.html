@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Environment Search</title>
+
+
+  <script src = "assets/main.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -60,13 +63,15 @@
       font-size: 18px;
       font-weight: bold;
     }
+    
   </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
   <div class="container">
     <div class="search-box">
       <input type="text" class="search-input" placeholder="Search">
-      <button class="search-button">Search</button>
+      <button onclick = "searchButtonScript();" class="search-button">Search</button>
     </div>
 
     <div class="environment-info">
