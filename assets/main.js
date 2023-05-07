@@ -1,6 +1,15 @@
 function searchButtonScript() {
-    console.log("Hello");
-    electricityResponse = callElectricityAPI(null, null, "hawaii", "96825", null);//Hardcoded values for now
+    address = document.getElementById("address_input").value;
+    city = document.getElementById("city_input").value;
+    state = document.getElementById("state_input").value;
+    zipcode = document.getElementById("zipcode_input").value;
+
+    console.log(address)
+    console.log(city)
+    console.log(state)
+    console.log(zipcode)
+
+    electricityResponse = callElectricityAPI(address, city, state, zipcode, null);//Ignore house type for now
     airQualityResponse = callAirQualAPI();
     co2Response = callCO2API();
 
@@ -55,19 +64,19 @@ function createDataQuery(address, city, state, zip, type){
     atLeastOne = false;
 
     //We always have this
-    if (zip != null) {
+    if (zip != null && zip != "") {
         query += ("zip=" + zip + "&");
     }
 
-    if (address != null) {
+    if (address != null && address != "") {
         query += ("address=" + address.replaceAll(" ", "%20") + "&");
     }
 
-    if (city != null) {
+    if (city != null && city != "") {
         query+= ("city=" + city + "&");
     }
 
-    if (state != null) {
+    if (state != null && state != "") {
         query += ("state=" + state + "&")
     }
 
@@ -97,13 +106,13 @@ function updateOutput(electricityResponse, airQualityResponse, co2Response){
         let percentBuffer = 0.2
 
         if(usage > (average - average * percentBuffer) && usage < (average + average * percentBuffer)){//plus minus 20% of average
-            document.getElementById("top_circle").classList.value="yellow-circle"
+            document.getElementById("elec_circle").classList.value="yellow-circle"
         }
         else if (usage < (average - average * percentBuffer)){//lower end
-            document.getElementById("top_circle").classList.value="green-circle"
+            document.getElementById("elec_circle").classList.value="green-circle"
         }
         else {
-            document.getElementById("top_circle").classList.value="red-circle"
+            document.getElementById("elec_circle").classList.value="red-circle"
         }
 
         console.log(average - average * percentBuffer)
