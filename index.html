@@ -1,93 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Environment Search</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environment Search</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f2f2f2;
+        }
 
-  <script src = "assets/main.js"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background-color: #f2f2f2;
-    }
-    .container {
-      text-align: center;
-    }
-    .search-box {
-      display: inline-block;
-      position: relative;
-    }
-    .search-input {
-      padding: 10px;
-      width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
-    .search-button {
-      position: absolute;
-      right: 0;
-      top: 0;
-      padding: 10px;
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 0 3px 3px 0;
-    }
-    .environment-info {
-      margin-top: 30px;
-    }
-    .circle-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin-right: 15px;
-    }
-    .circle-text {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    
-  </style>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        .container {
+            text-align: center;
+        }
+
+        .search-box {
+            padding: 10px;
+        }
+
+        .search-input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .search-button {
+
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 3px 3px 0;
+            width: 200px;
+            font-size: 25px;
+        }
+
+        .environment-info {
+            margin-top: 30px;
+        }
+
+        .circle-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: #ccc;
+        }
+
+        .circle-text {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .red-circle {
+            background-color: red;
+
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .yellow-circle {
+            background-color: yellow;
+
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .green-circle {
+            background-color: green;
+
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .input-text {
+            font-weight: bold;
+            font-size: 25px;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="assets/main.js"></script>
 </head>
-<body>
-  <div class="container">
-    <div class="search-box">
-      <input type="text" class="search-input" placeholder="Search">
-      <button onclick = "searchButtonScript();" class="search-button">Search</button>
-    </div>
 
-    <div class="environment-info">
-      <div class="circle-container">
-        <div class="circle" id="electricity" style="background-color: #ccc;"></div>
-        <span class="circle-text">Electricity</span>
-      </div>
-      <div class="circle-container">
-        <div class="circle" id="air-quality" style="background-color: #ccc;"></div>
-        <span class="circle-text">Air Quality</span>
-      </div>
-      <div class="circle-container">
-        <div class="circle" id="co2-emission" style="background-color: #ccc;"></div>
-        <span class="circle-text">CO2 Emission</span>
-      </div>
+<body>
+    <div class="container">
+        <div>
+            <div class="search-box">
+                <p class="input-text">Address</p>
+                <input id="address_input" type="text" class="search-input" placeholder="Search">
+            </div>
+
+            <div class="search-box">
+                <p class="input-text">City</p>
+                <input id="city_input" type="text" class="search-input" placeholder="Search">
+            </div>
+
+            <div class="search-box">
+                <p class="input-text">State</p>
+                <input id="state_input" type="text" class="search-input" placeholder="Search">
+            </div>
+
+            <div class="search-box">
+                <p class="input-text">Zipcode</p>
+                <input id="zipcode_input" type="text" class="search-input" placeholder="Search">
+            </div>
+
+            <div>
+                <button onclick="searchButtonScript();" class="search-button">Search</button>
+            </div>
+
+
+
+        </div>
+
+
+        <div class="environment-info">
+            <div class="circle-container">
+                <div id="elec_circle" class="circle" id="electricity"></div>
+                <span class="circle-text">Electricity</span>
+            </div>
+            <div class="circle-container">
+                <div id="air_circle" class="circle" id="airQuality"></div>
+                <span class="circle-text">Air Quality</span>
+            </div>
+            <div id="co2_circle" class="circle-container">
+                <div class="circle" id="co2-emission" style="background-color: #ccc;"></div>
+                <span class="circle-text">CO2 Emission</span>
+            </div>
+        </div>
     </div>
-  </div>
 </body>
+
 </html>
