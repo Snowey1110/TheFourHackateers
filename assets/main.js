@@ -167,7 +167,6 @@ function updateOutput(electricityResponse, airQualityResponse, co2Response) {
     airQualityResponse.then(airQualityResponse => {
         console.log(airQualityResponse);
         if (airQualityResponse <= 100) {
-            console.log("Here");
             document.getElementById("air_circle").classList.value = "green-circle"
         } else if (airQualityResponse <= 200) {
             document.getElementById("air_circle").classList.value = "yellow-circle"
@@ -175,19 +174,4 @@ function updateOutput(electricityResponse, airQualityResponse, co2Response) {
             document.getElementById("air_circle").classList.value = "red-circle"
         }
     });
-
-    // const cityData = data.data;
-    // const pollutionLevel = checkPollutionLevel(cityData);
-    // console.log(pollutionLevel);
-    // if (pollutionLevel === "The air quality in this city is good" || pollutionLevel === "The air quality in this city is moderate") {
-    //     document.getElementById("circle").classList.value = "yellow-circle"
-    // } else if (pollutionLevel === "The air quality in this city is unhealthy for sensitive groups" || pollutionLevel === "The air quality in this city is unhealthy") {
-    //     document.getElementById("circle").classList.value = "green-circle"
-    // } else {
-    //     // document.getElementById("circle").classList.value = "red-circle"
-    // }
-
-    // console.log(average - average * percentBuffer);
-    // console.log(average + average * percentBuffer);
-
 }
