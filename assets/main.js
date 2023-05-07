@@ -17,8 +17,6 @@ function searchButtonScript() {
 }
 
 
-
-
 /**
  * 
  * @param {*} address Address of the location
@@ -29,7 +27,8 @@ function searchButtonScript() {
  * 
  * Returns a promise object that contains the data from the API
  */
-function callElectricityAPI(address, city, state, zip, type) {
+
+function callElectricityAPI(address, city, state, zip, type){
 
     let endpoint = "https://apis.wattbuy.com/v3/electricity/estimation"
     let dataQuery = createDataQuery(address, city, state, zip, type);
@@ -45,7 +44,6 @@ function callElectricityAPI(address, city, state, zip, type) {
 
 }
 
-
 function electrictyAPIResult(finalURL, apiKey) {
     return $.ajax({
         type: "GET",
@@ -59,8 +57,7 @@ function electrictyAPIResult(finalURL, apiKey) {
     });
 }
 
-
-function createDataQuery(address, city, state, zip, type) {
+function createDataQuery(address, city, state, zip, type){
     query = "?";
     atLeastOne = false;
 
@@ -74,7 +71,7 @@ function createDataQuery(address, city, state, zip, type) {
     }
 
     if (city != null && city != "") {
-        query += ("city=" + city + "&");
+        query+= ("city=" + city + "&");
     }
 
     if (state != null && state != "") {
@@ -136,6 +133,35 @@ function checkPollutionLevel(cityData) {
 
 function callCO2API() {
 
+    electricityResponse.done(data => {
+        
+
+        let usage = data.est_usage
+
+        let average = 10632
+        let percentBuffer = 0.2
+
+        if(usage > (average - average * percentBuffer) && usage < (average + average * percentBuffer)){//plus minus 20% of average
+            document.getElementById("elec_circle").classList.value="yellow-circle"
+        }
+        else if (usage < (average - average * percentBuffer)){//lower end
+            document.getElementById("elec_circle").classList.value="green-circle"
+        }
+        else {
+            document.getElementById("elec_circle").classList.value="red-circle"
+        }
+
+        console.log(average - average * percentBuffer)
+        console.log(average + average * percentBuffer)
+
+        console.log(data)
+
+    });
+    
+    
+
+
+
 }
 
 function updateOutput(electricityResponse, airQualityResponse, co2Response) {
@@ -175,3 +201,4 @@ function updateOutput(electricityResponse, airQualityResponse, co2Response) {
         }
     });
 }
+
